@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: openai-chatbot
+  namespace: microdegree
   labels:
     app: openai-chatbot
 spec:
@@ -32,19 +33,21 @@ apiVersion: v1
 kind: Service
 metadata:
   name: openai-chatbot-service
+  namespace: microdegree
 spec:
   type: LoadBalancer
   selector:
     app: openai-chatbot
   ports:
   - protocol: TCP
-    port: 80 # External port
-    targetPort: 8501 # Container port
+    port: 80
+    targetPort: 8501
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: openai-chatbot-hpa
+  namespace: microdegree
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
