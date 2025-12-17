@@ -3,9 +3,7 @@ import streamlit as st
 import validators
 from dotenv import load_dotenv
 
-# =============================
-# LANGCHAIN (NEW STRUCTURE)
-# =============================
+# LangChain Imports
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
@@ -24,22 +22,20 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 
-# =============================
+# Load environment variables
 load_dotenv()
+
+# Streamlit setup
 st.set_page_config(page_title="RAG Chatbot", layout="wide")
 st.title("🤖 RAG Chatbot")
 
-# =============================
-# SESSION STATE
-# =============================
+# Session state initialization
 if "store" not in st.session_state:
     st.session_state.store = {}
 if "vectorstore" not in st.session_state:
     st.session_state.vectorstore = None
 
-# =============================
-# SIDEBAR
-# =============================
+# Sidebar for API keys & mode selection
 with st.sidebar:
     GROQ_API_KEY = st.text_input("Groq API Key", type="password")
     OPENAI_API_KEY = st.text_input("OpenAI API Key", type="password")
@@ -50,19 +46,16 @@ with st.sidebar:
         os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
         st.success("Initialized")
 
-# =============================
+# Cached embeddings
 @st.cache_resource
 def get_embeddings():
     return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 embeddings = get_embeddings()
 
-# =============================
-# WEBSITE RAG
-# =============================
+# ---------------- Website RAG ----------------
 if MODE == "Website RAG":
     url = st.text_input("Website URL")
-
     if st.button("Load Website"):
         if not validators.url(url):
             st.error("Invalid URL")
@@ -85,9 +78,7 @@ if MODE == "Website RAG":
             )
             st.success("Website loaded")
 
-# =============================
-# CHAT
-# =============================
+# ---------------- Chat with RAG ----------------
 if MODE == "Website RAG" and st.session_state.vectorstore:
     retriever = st.session_state.vectorstore.as_retriever(k=4)
 
@@ -139,9 +130,7 @@ if MODE == "Website RAG" and st.session_state.vectorstore:
         )
         st.chat_message("assistant").write(response["answer"])
 
-# =============================
-# OPENAI CHAT
-# =============================
+# ---------------- OpenAI Chat ----------------
 if MODE == "OpenAI Chat":
     if prompt := st.chat_input("Say something"):
         llm = ChatOpenAI(
