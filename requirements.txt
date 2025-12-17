@@ -1,46 +1,28 @@
-# ===============================
-# Core Web & Streamlit
-# ===============================
-streamlit>=1.32.0
-validators>=0.22.0
-python-dotenv>=1.0.1
-nest-asyncio>=1.6.0
-httpx>=0.25.0
-requests>=2.31.0
-beautifulsoup4>=4.12.0
-python-multipart>=0.0.6
+# Web framework
+streamlit==1.26.1
+python-dotenv==1.0.1
+validators==0.21.2
 
-# ===============================
-# Web Scraping & Content Processing
-# ===============================
-unstructured>=0.11.0
-pypdf>=3.17.0
-youtube-transcript-api>=0.6.0
-pytube>=15.0.0
+# LangChain core
+langchain==0.1.156
+langchain-huggingface==0.0.5
+langchain-chroma==0.0.6
+langchain-community==0.1.17
+langchain-groq==0.0.1
+langchain-openai==0.1.9
 
-# ===============================
-# LangChain Core & Components
-# ===============================
-langchain==0.2.11
-langchain-core==0.2.30
-langchain-community==0.2.10
-langchain-text-splitters==0.2.2
-langchain-chroma==0.1.4
-langchain-openai==0.1.22
-langchain-groq==1.1.1
-langchain-huggingface==0.0.3
+# Embeddings & models
+sentence-transformers==2.2.2
+transformers==4.34.0
+torch==2.1.0
+torchvision==0.16.1
 
-# ===============================
-# Vector Store & Embeddings
-# ===============================
-chromadb>=0.4.0
-sentence-transformers>=2.2.2
+# Text splitting & tokenization
+tiktoken==0.4.0
 
-# ===============================
-# Utilities & Async Support
-# ===============================
-pydantic>=2.0.0
-tenacity>=8.2.0
-protobuf==3.20.0
-watchdog>=3.0.0
-psutil>=5.9.0
+# Chroma DB for vector storage
+chromadb==0.4.4
+
+# Utilities
+requests==2.31.0
+urllib3==2.0.5
