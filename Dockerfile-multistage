@@ -1,33 +1,45 @@
-# Use slim Python image
-FROM python:3.11-slim
+# -------- Stage 1: Builder --------
+FROM python:3.11-slim AS builder
 
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
+# Install system dependencies for building packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    git \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Hugging Face cache folder to writable location
-ENV HF_HOME=/app/.cache/huggingface
-
-# Create cache directory
-RUN mkdir -p /app/.cache/huggingface && chmod -R 777 /app/.cache/huggingface
+# Upgrade pip
+RUN python -m pip install --upgrade pip
 
 # Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Preload sentence-transformers model to avoid runtime download
+# Preload SentenceTransformer model for faster startup
 RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
 
-# Copy app code
+# -------- Stage 2: Runtime --------
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Set HuggingFace cache directory
+ENV HF_HOME=/app/.cache/huggingface
+
+# Copy installed Python packages from builder
+COPY --from=builder /usr/local /usr/local
+
+# Copy HuggingFace cache to runtime stage
+COPY --from=builder /root/.cache/huggingface /app/.cache/huggingface
+
+# Copy application code
 COPY . .
 
 # Expose Streamlit port
 EXPOSE 8501
 
-# Run Streamlit
+# Run Streamlit app
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true"]
