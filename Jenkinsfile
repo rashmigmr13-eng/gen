@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/ManojKRISHNAPPA/Generative-AI-Project.git'
+                git branch: 'main', url: 'https://github.com/rashmigmr13-eng/gen.git'
             }
         }
 
@@ -88,7 +88,7 @@ pipeline {
                     credentialsId: 'kube',
                     namespace: "${NAMESPACE}",
                     restrictKubeConfigAccess: false,
-                    serverUrl: 'https://AB2AD8E7E396070F02E8CEC4D6A0D7E9.gr7.us-east-1.eks.amazonaws.com'
+                    serverUrl: 'https://CDDC6A719AA1EB6DB1B87808CBC3D2C2.gr7.us-east-1.eks.amazonaws.com'
                 ) {
                     sh "sed -i 's|replace|${IMAGE_NAME}|g' deployment.yaml"
                     sh "kubectl apply -f deployment.yaml -n ${NAMESPACE}"
@@ -106,7 +106,7 @@ pipeline {
                     credentialsId: 'kube',
                     namespace: "${NAMESPACE}",
                     restrictKubeConfigAccess: false,
-                    serverUrl: 'https://AB2AD8E7E396070F02E8CEC4D6A0D7E9.gr7.us-east-1.eks.amazonaws.com'
+                    serverUrl: 'https://CDDC6A719AA1EB6DB1B87808CBC3D2C2.gr7.us-east-1.eks.amazonaws.com'
                 ) {
                     sh "kubectl get deployment -n ${NAMESPACE}"
                     sh "kubectl get pods -n ${NAMESPACE}"
@@ -141,9 +141,9 @@ pipeline {
                 emailext (
                     subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
                     body: body,
-                    to: 'manojdevopstest@gmail.com',
-                    from: 'manojdevopstest@gmail.com',
-                    replyTo: 'manojdevopstest@gmail.com',
+                    to: 'rashmigmr13@gmail.com',
+                    from: 'rashmigmr13@gmail.com',
+                    replyTo: 'rashmigmr13@gmail.com',
                     mimeType: 'text/html',
                     attachmentsPattern: 'trivy-image-report.html'
                 )
