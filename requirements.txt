@@ -1,28 +1,29 @@
-# Web framework
 streamlit==1.26.1
 python-dotenv==1.0.1
 validators==0.21.2
 
-# LangChain core
-langchain==0.1.156
-langchain-huggingface==0.0.5
-langchain-chroma==0.0.6
-langchain-community==0.1.17
-langchain-groq==0.0.1
-langchain-openai==0.1.9
+# Use latest stable LangChain version compatible with Python 3.11
+langchain>=0.1.20
+
+# LangChain HuggingFace, Chroma, and OpenAI connectors
+langchain-huggingface>=0.0.5
+langchain-chroma>=0.0.6
+langchain-openai>=0.1.9
+langchain-community>=0.1.17
+langchain-groq>=0.0.1
 
 # Embeddings & models
-sentence-transformers==2.2.2
-transformers==4.34.0
-torch==2.1.0
-torchvision==0.16.1
+sentence-transformers>=2.2.2
+transformers>=4.34.0
+torch>=2.1.0
+torchvision>=0.16.1
 
 # Text splitting & tokenization
-tiktoken==0.4.0
+tiktoken>=0.4.0
 
 # Chroma DB for vector storage
-chromadb==0.4.4
+chromadb>=0.4.4
 
 # Utilities
-requests==2.31.0
-urllib3==2.0.5
+requests>=2.31.0
+urllib3>=2.0.5
