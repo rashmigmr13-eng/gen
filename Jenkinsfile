@@ -7,7 +7,8 @@ pipeline {
         NAMESPACE = "microdegree"
         DEPLOYMENT_NAME = "openai-chatbot"
         SERVICE_NAME = "openai-chatbot-service"
-        IMAGE_NAME = "manojkrishnappa/genai-openai:${GIT_COMMIT}"
+        DOCKER_USERNAME = "rashmidevops1"
+        IMAGE_NAME = "${DOCKER_USERNAME}/genai-openai:${GIT_COMMIT}"
     }
 
     stages {
@@ -21,7 +22,7 @@ pipeline {
             steps {
                 script {
                     sh 'printenv'
-                    sh 'docker build -t manojkrishnappa/genai-openai:${GIT_COMMIT} .'
+                    sh "docker build -t ${IMAGE_NAME} ."
                 }
             }
         }
@@ -29,7 +30,7 @@ pipeline {
         stage('Docker Image Scan') {
             steps {
                 script {
-                    sh 'trivy image --format table -o trivy-image-report.html manojkrishnappa/genai-openai:${GIT_COMMIT}'
+                    sh "trivy image --format table -o trivy-image-report.html ${IMAGE_NAME}"
                 }
             }
         }
@@ -44,34 +45,9 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push manojkrishnappa/genai-openai:${GIT_COMMIT}'
+                sh "docker push ${IMAGE_NAME}"
             }
         }
-
-        // stage('Python SonarQube Analysis') {
-        //     steps {
-        //         sh """
-        //             pip install --upgrade pip pytest coverage
-        //             coverage run -m pytest
-        //             coverage xml -o coverage.xml
-
-        //             sonar-scanner \
-        //               -Dsonar.projectKey=OpenAI \
-        //               -Dsonar.sources=. \
-        //               -Dsonar.host.url=http://3.85.22.155:9000 \
-        //               -Dsonar.login=daada275b6ba2babdd26e784a8133bd4fea10379 \
-        //               -Dsonar.python.coverage.reportPaths=coverage.xml
-        //         """
-        //     }
-        // }
-
-        // stage('Quality Gate') {
-        //     steps {
-        //         timeout(time: 2, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
 
         stage('Update EKS Config') {
             steps {
@@ -83,7 +59,7 @@ pipeline {
             steps {
                 withKubeConfig(
                     caCertificate: '',
-                    clusterName: 'microdegree-cluster',
+                    clusterName: "${CLUSTER_NAME}",
                     contextName: '',
                     credentialsId: 'kube',
                     namespace: "${NAMESPACE}",
@@ -101,7 +77,7 @@ pipeline {
             steps {
                 withKubeConfig(
                     caCertificate: '',
-                    clusterName: 'microdegree-cluster',
+                    clusterName: "${CLUSTER_NAME}",
                     contextName: '',
                     credentialsId: 'kube',
                     namespace: "${NAMESPACE}",
